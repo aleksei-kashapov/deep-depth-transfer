@@ -6,7 +6,7 @@ class DataTransformManager:
 
     def __init__(self, used_img_size, final_img_size, transform_params):
         self._ratio = max(float(final_img_size[0]) / used_img_size[0],
-                          float(final_img_size[1] / used_img_size[1]))
+                          float(final_img_size[1]) / used_img_size[1])
         self._final_img_size = final_img_size
         self._scale_compose = [
             albumentations.Resize(
@@ -14,12 +14,12 @@ class DataTransformManager:
                 width=int(used_img_size[1] * self._ratio),
                 always_apply=True
             ),
-            # albumentations.CenterCrop(
-            #     height=self._final_img_size[0],
-            #     width=self._final_img_size[1],
-            #     always_apply=True,
-            #     p=1
-            # ),
+            albumentations.CenterCrop(
+                height=self._final_img_size[0],
+                width=self._final_img_size[1],
+                always_apply=True,
+                p=1
+            )
         ]
         self._normalize_transform = albumentations.Normalize()
         self._normalize_no_transform = albumentations.Normalize(mean=(0, 0, 0), std=(1, 1, 1))
